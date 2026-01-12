@@ -78,7 +78,7 @@ footer a:hover{color:var(--text);background:#f9fafb}
 </div>
 
 <script>
-const images = ["./img/cat-hug.png", "./img/dog-hug.png", "./img/axolotl-hug.png"];
+const images = ["img/cat-hug.png", "img/dog-hug.png", "img/axolotl-hug.png"];
 const cute = [
   ["i need a hug", "just a little"],
   ["everything is fine", "probably"],
@@ -96,49 +96,41 @@ const topInput = document.getElementById("topText");
 const bottomInput = document.getElementById("bottomText");
 const localEl = document.getElementById("local");
 
-<<<<<<< HEAD
 let currentImage = new Image();
 let imageLoaded = false;
-=======
-let img = new Image();
 
-img.onload = () => {
-  draw();
-};
-
-img.onerror = () => {
-  console.log("Image failed:", img.src);
-};
-
-function pick(){
-  const src = images[Math.floor(Math.random()*images.length)];
-  img.src = src + "?v=" + Date.now(); // важный трюк против кеша
-}
-
-pick();
-
->>>>>>> 0b126ca0059e23571e5ecd1a64675eb2b9631d66
-
+// Set up image load handlers
 currentImage.onload = function() {
   imageLoaded = true;
+  console.log("Image loaded:", currentImage.src);
   draw();
 };
 
 currentImage.onerror = function() {
   console.error("Failed to load image:", currentImage.src);
+  imageLoaded = false;
+  // Try next image as fallback
+  const currentIndex = images.findIndex(img => currentImage.src.includes(img));
+  const nextIndex = (currentIndex + 1) % images.length;
+  const src = images[nextIndex] + "?v=" + Date.now();
+  console.log("Trying fallback image:", src);
+  currentImage.src = src;
 };
 
 // Load random image
 function pickRandomImage() {
   const randomIndex = Math.floor(Math.random() * images.length);
   const src = images[randomIndex] + "?v=" + Date.now(); // Cache busting
-  currentImage.src = src;
   imageLoaded = false;
+  console.log("Loading image:", src);
+  currentImage.src = src;
 }
 
 // Draw everything on canvas
 function draw() {
-  if (!imageLoaded) return;
+  if (!imageLoaded || !currentImage.complete || currentImage.width === 0) {
+    return;
+  }
 
   // Clear canvas with white background
   ctx.fillStyle = "#fff";
