@@ -99,21 +99,22 @@ const localEl = document.getElementById("local");
 let currentImage = new Image();
 let imageLoaded = false;
 
-// Load random image
-function pickRandomImage() {
-  const randomIndex = Math.floor(Math.random() * images.length);
-  currentImage.src = images[randomIndex];
-  imageLoaded = false;
-}
-
 currentImage.onload = function() {
   imageLoaded = true;
   draw();
 };
 
 currentImage.onerror = function() {
-  console.error("Failed to load image");
+  console.error("Failed to load image:", currentImage.src);
 };
+
+// Load random image
+function pickRandomImage() {
+  const randomIndex = Math.floor(Math.random() * images.length);
+  const src = images[randomIndex] + "?v=" + Date.now(); // Cache busting
+  currentImage.src = src;
+  imageLoaded = false;
+}
 
 // Draw everything on canvas
 function draw() {
