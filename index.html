@@ -96,8 +96,28 @@ const topInput = document.getElementById("topText");
 const bottomInput = document.getElementById("bottomText");
 const localEl = document.getElementById("local");
 
+<<<<<<< HEAD
 let currentImage = new Image();
 let imageLoaded = false;
+=======
+let img = new Image();
+
+img.onload = () => {
+  draw();
+};
+
+img.onerror = () => {
+  console.log("Image failed:", img.src);
+};
+
+function pick(){
+  const src = images[Math.floor(Math.random()*images.length)];
+  img.src = src + "?v=" + Date.now(); // важный трюк против кеша
+}
+
+pick();
+
+>>>>>>> 0b126ca0059e23571e5ecd1a64675eb2b9631d66
 
 currentImage.onload = function() {
   imageLoaded = true;
