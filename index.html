@@ -22,7 +22,8 @@ body{margin:0;font-family:Inter,system-ui;background:#fff;color:var(--text)}
 .page{max-width:980px;width:100%}
 .grid{display:grid;grid-template-columns:1fr min(420px,100%) 1fr;gap:14px}
 .ad{border:1px dashed var(--border);border-radius:16px;min-height:140px;
-display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted)}
+padding:10px;display:block;color:var(--muted)}
+.ad .adsbygoogle{display:block;width:100% !important}
 .center{border:1px solid var(--border);border-radius:22px;padding:16px;background:#fff;position:relative}
 canvas{width:100%;height:auto;display:block;border-radius:8px}
 .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
@@ -68,7 +69,9 @@ footer a:hover{color:var(--text);background:#f9fafb}
          data-full-width-responsive="true"></ins>
     <script>
          if (window.innerWidth > 900) {
-           (adsbygoogle = window.adsbygoogle || []).push({});
+           setTimeout(() => {
+             (adsbygoogle = window.adsbygoogle || []).push({});
+           }, 0);
          }
     </script>
   </div>
@@ -114,7 +117,9 @@ footer a:hover{color:var(--text);background:#f9fafb}
          data-full-width-responsive="true"></ins>
     <script>
          if (window.innerWidth > 900) {
-           (adsbygoogle = window.adsbygoogle || []).push({});
+           setTimeout(() => {
+             (adsbygoogle = window.adsbygoogle || []).push({});
+           }, 0);
          }
     </script>
   </div>
