@@ -23,13 +23,21 @@ body{margin:0;font-family:Inter,system-ui;background:#fff;color:var(--text)}
 .grid{display:grid;grid-template-columns:1fr min(420px,100%) 1fr;gap:14px}
 .ad{border:1px dashed var(--border);border-radius:16px;min-height:140px;
 display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted)}
-.center{border:1px solid var(--border);border-radius:22px;padding:16px}
-canvas{width:100%;height:auto}
-.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px}
-button,input,a{border:1px solid var(--border);border-radius:999px;padding:12px 14px;
-font-weight:600;background:#fff}
-.stats{text-align:center;color:var(--muted);font-size:14px;margin-top:10px}
-footer{text-align:center;font-size:12px;color:var(--muted);margin-top:14px}
+.center{border:1px solid var(--border);border-radius:22px;padding:16px;background:#fff}
+canvas{width:100%;height:auto;display:block;border-radius:8px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
+input{flex:1;min-width:200px;border:1px solid var(--border);border-radius:999px;padding:12px 16px;
+font-weight:400;background:#fff;font-size:14px;font-family:Inter}
+input:focus{outline:none;border-color:#9ca3af}
+button,a{border:1px solid var(--border);border-radius:999px;padding:12px 16px;
+font-weight:600;background:#fff;font-size:14px;cursor:pointer;text-decoration:none;color:var(--text);
+font-family:Inter;transition:background 0.2s}
+button:hover,a:hover{background:#f9fafb}
+button:active{background:#f3f4f6}
+.stats{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
+footer{text-align:center;font-size:12px;color:var(--muted);margin-top:20px}
+footer a{color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:4px}
+footer a:hover{color:var(--text);background:#f9fafb}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -49,13 +57,13 @@ footer{text-align:center;font-size:12px;color:var(--muted);margin-top:14px}
       <input id="bottomText" placeholder="Bottom text…" maxlength="40">
       <button id="randomBtn">✨ Cute caption</button>
       <button id="smileBtn">🙂 I smiled</button>
-      <button id="saveBtn">💾 Save</button>
+      <button id="saveBtn">💾 Save image</button>
       <button id="shareBtn">📤 Share</button>
       <a href="https://buymeacoffee.com/YOURNAME" target="_blank">☕ Treat them</a>
     </div>
 
     <div class="stats">
-      Smiles today: <b id="global">12483</b> · Your smiles: <b id="local">0</b>
+      Your smiles: <b id="local">0</b>
     </div>
   </div>
 
@@ -70,71 +78,194 @@ footer{text-align:center;font-size:12px;color:var(--muted);margin-top:14px}
 </div>
 
 <script>
-const images=["img/cat-hug.png","img/dog-hug.png","img/axolotl-hug.png"];
-const cute=[
-["i need a hug","just a little"],
-["everything is fine","probably"],
-["sending you","a tiny hug"],
-["no thoughts","only feelings"]
+const images = ["./img/cat-hug.png", "./img/dog-hug.png", "./img/axolotl-hug.png"];
+const cute = [
+  ["i need a hug", "just a little"],
+  ["everything is fine", "probably"],
+  ["sending you", "a tiny hug"],
+  ["no thoughts", "only feelings"],
+  ["you're doing great", "keep going"],
+  ["take a breath", "you've got this"],
+  ["sending love", "your way"],
+  ["it's okay", "to rest"]
 ];
 
-const c=document.getElementById("canvas"),ctx=c.getContext("2d");
-const top=document.getElementById("topText");
-const bot=document.getElementById("bottomText");
-const localEl=document.getElementById("local");
-const globalEl=document.getElementById("global");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const topInput = document.getElementById("topText");
+const bottomInput = document.getElementById("bottomText");
+const localEl = document.getElementById("local");
 
-let img=new Image();
-function pick(){
- img.src=images[Math.floor(Math.random()*images.length)];
-}
-img.onload=draw;
+let currentImage = new Image();
+let imageLoaded = false;
 
-function draw(){
- ctx.fillStyle="#fff";ctx.fillRect(0,0,900,900);
- const r=Math.min(800/img.width,800/img.height);
- const w=img.width*r,h=img.height*r;
- ctx.drawImage(img,(900-w)/2,(900-h)/2,w,h);
- caption(top.value,40,false);
- caption(bot.value,860,true);
- ctx.fillStyle="rgba(0,0,0,.3)";
- ctx.font="20px Inter";ctx.textAlign="right";
- ctx.fillText("justsmile4u.com",880,880);
+// Load random image
+function pickRandomImage() {
+  const randomIndex = Math.floor(Math.random() * images.length);
+  currentImage.src = images[randomIndex];
+  imageLoaded = false;
 }
 
-function caption(t,y,b){
- if(!t)return;
- ctx.font="800 56px Inter";ctx.textAlign="center";
- ctx.textBaseline=b?"bottom":"top";
- ctx.fillStyle="rgba(255,255,255,.85)";
- ctx.fillRect(60,b?y-70:y,780,70);
- ctx.fillStyle="#111";
- ctx.fillText(t,450,b?y-56:y+10);
+currentImage.onload = function() {
+  imageLoaded = true;
+  draw();
+};
+
+currentImage.onerror = function() {
+  console.error("Failed to load image");
+};
+
+// Draw everything on canvas
+function draw() {
+  if (!imageLoaded) return;
+
+  // Clear canvas with white background
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, 900, 900);
+
+  // Calculate image dimensions to fit centered
+  const maxSize = 800;
+  const scale = Math.min(maxSize / currentImage.width, maxSize / currentImage.height);
+  const width = currentImage.width * scale;
+  const height = currentImage.height * scale;
+  const x = (900 - width) / 2;
+  const y = (900 - height) / 2;
+
+  // Draw image centered
+  ctx.drawImage(currentImage, x, y, width, height);
+
+  // Draw captions
+  drawCaption(topInput.value, 40, false);
+  drawCaption(bottomInput.value, 860, true);
+
+  // Draw watermark
+  ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+  ctx.font = "18px Inter";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "bottom";
+  ctx.fillText("justsmile4u.com", 880, 880);
 }
 
-document.getElementById("randomBtn").onclick=()=>{
- const p=cute[Math.floor(Math.random()*cute.length)];
- top.value=p[0];bot.value=p[1];draw();
+// Draw caption with auto-scaling text
+function drawCaption(text, y, isBottom) {
+  if (!text) return;
+
+  const padding = 20;
+  const maxWidth = 780;
+  const minFontSize = 32;
+  const maxFontSize = 72;
+  const lineHeight = 1.2;
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = isBottom ? "bottom" : "top";
+  ctx.font = `800 ${maxFontSize}px Inter`;
+
+  // Measure text and calculate font size
+  let fontSize = maxFontSize;
+  let metrics = ctx.measureText(text);
+  
+  while (metrics.width > maxWidth && fontSize > minFontSize) {
+    fontSize -= 2;
+    ctx.font = `800 ${fontSize}px Inter`;
+    metrics = ctx.measureText(text);
+  }
+
+  // Calculate text dimensions
+  const textHeight = fontSize * lineHeight;
+  const boxHeight = textHeight + padding * 2;
+  const boxY = isBottom ? y - boxHeight : y;
+
+  // Draw white rounded background
+  const cornerRadius = 12;
+  const boxX = 60;
+  const boxWidth = maxWidth;
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+  roundRect(ctx, boxX, boxY, boxWidth, boxHeight, cornerRadius);
+  ctx.fill();
+
+  // Draw text with stroke for better readability
+  const textY = isBottom ? y - padding - fontSize * 0.1 : y + padding + fontSize * 0.9;
+  
+  ctx.fillStyle = "#111827";
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+  ctx.lineWidth = 3;
+  ctx.lineJoin = "round";
+  ctx.miterLimit = 2;
+  
+  ctx.strokeText(text, 450, textY);
+  ctx.fillText(text, 450, textY);
+}
+
+// Helper function to draw rounded rectangle
+function roundRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+// Event listeners
+topInput.addEventListener("input", draw);
+bottomInput.addEventListener("input", draw);
+
+document.getElementById("randomBtn").onclick = function() {
+  const pair = cute[Math.floor(Math.random() * cute.length)];
+  topInput.value = pair[0];
+  bottomInput.value = pair[1];
+  draw();
 };
-document.getElementById("saveBtn").onclick=()=>{
- const a=document.createElement("a");
- a.download="justsmile4u.png";
- a.href=c.toDataURL();a.click();
+
+document.getElementById("smileBtn").onclick = function() {
+  let count = parseInt(localStorage.getItem("smiles") || "0", 10);
+  count++;
+  localStorage.setItem("smiles", count.toString());
+  localEl.textContent = count;
+  pickRandomImage();
 };
-document.getElementById("shareBtn").onclick=async()=>{
- if(!navigator.share)return alert("Not supported");
- c.toBlob(b=>{
-  navigator.share({files:[new File([b],"smile.png",{type:"image/png"})]});
- });
+
+document.getElementById("saveBtn").onclick = function() {
+  const link = document.createElement("a");
+  link.download = "justsmile4u.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 };
-document.getElementById("smileBtn").onclick=()=>{
- let n=+(localStorage.smiles||0)+1;
- localStorage.smiles=n;localEl.textContent=n;
- globalEl.textContent=+globalEl.textContent+1;
- pick();
+
+document.getElementById("shareBtn").onclick = async function() {
+  if (!navigator.share) {
+    alert("Sharing is not supported in your browser.");
+    return;
+  }
+
+  try {
+    canvas.toBlob(function(blob) {
+      const file = new File([blob], "justsmile4u.png", { type: "image/png" });
+      navigator.share({
+        files: [file],
+        title: "Just Smile 4 You",
+        text: "Made with justsmile4u.com"
+      }).catch(function(err) {
+        if (err.name !== "AbortError") {
+          console.error("Error sharing:", err);
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Error creating share:", err);
+    alert("Unable to share. Please try saving the image instead.");
+  }
 };
-localEl.textContent=localStorage.smiles||0;
-pick();
+
+// Initialize
+localEl.textContent = localStorage.getItem("smiles") || "0";
+pickRandomImage();
 </script>
 </body>
 </html>
