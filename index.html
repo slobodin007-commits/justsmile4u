@@ -35,6 +35,10 @@ font-family:Inter;transition:background 0.2s}
 button:hover,a:hover{background:#f9fafb}
 button:active{background:#f3f4f6}
 .stats{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
+.language-selector{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.language-selector select{border:1px solid var(--border);border-radius:999px;padding:8px 16px;
+font-weight:400;background:#fff;font-size:14px;font-family:Inter;cursor:pointer;color:var(--text)}
+.language-selector select:focus{outline:none;border-color:#9ca3af}
 footer{text-align:center;font-size:12px;color:var(--muted);margin-top:20px}
 footer a{color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:4px}
 footer a:hover{color:var(--text);background:#f9fafb}
@@ -71,6 +75,17 @@ footer a:hover{color:var(--text);background:#f9fafb}
       <button id="saveBtn">💾 Save image</button>
       <button id="shareBtn">📤 Share</button>
       <a href="https://buymeacoffee.com/justsmile4u" target="_blank">Made you smile? Treat them ☕</a>
+    </div>
+
+    <div class="language-selector">
+      <span>🌐</span>
+      <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        <option value="he">עברית</option>
+        <option value="de">Deutsch</option>
+        <option value="cs">Čeština</option>
+      </select>
     </div>
 
     <div class="stats">
@@ -135,16 +150,122 @@ const images = [
   "img/highland_calf-hug.png",
   "img/panda-hug.png"
 ];
-const cute = [
-  ["i need a hug", "just a little"],
-  ["everything is fine", "probably"],
-  ["sending you", "a tiny hug"],
-  ["no thoughts", "only feelings"],
-  ["you're doing great", "keep going"],
-  ["take a breath", "you've got this"],
-  ["sending love", "your way"],
-  ["it's okay", "to rest"]
-];
+const cute = {
+  en: [
+    ["i need a hug", "just a little"],
+    ["everything is fine", "probably"],
+    ["sending you", "a tiny hug"],
+    ["no thoughts", "only feelings"],
+    ["you're doing great", "keep going"],
+    ["take a breath", "you've got this"],
+    ["sending love", "your way"],
+    ["it's okay", "to rest"]
+  ],
+  ru: [
+    ["мне нужны объятия", "совсем чуть-чуть"],
+    ["всё хорошо", "наверное"],
+    ["отправляю тебе", "крошечное объятие"],
+    ["нет мыслей", "только чувства"],
+    ["у тебя всё отлично", "продолжай"],
+    ["сделай вдох", "ты справишься"],
+    ["отправляю любовь", "тебе"],
+    ["всё в порядке", "можно отдохнуть"]
+  ],
+  he: [
+    ["אני צריך חיבוק", "רק קצת"],
+    ["הכל בסדר", "כנראה"],
+    ["שולח לך", "חיבוק קטן"],
+    ["אין מחשבות", "רק רגשות"],
+    ["אתה מצוין", "תמשיך"],
+    ["קח נשימה", "תצליח"],
+    ["שולח אהבה", "דרכך"],
+    ["זה בסדר", "לנוח"]
+  ],
+  de: [
+    ["ich brauche eine umarmung", "nur ein bisschen"],
+    ["alles ist gut", "wahrscheinlich"],
+    ["sende dir", "eine kleine umarmung"],
+    ["keine gedanken", "nur gefühle"],
+    ["du machst das großartig", "mach weiter"],
+    ["atme durch", "du schaffst das"],
+    ["sende liebe", "deinen weg"],
+    ["es ist okay", "sich auszuruhen"]
+  ],
+  cs: [
+    ["potřebuji objetí", "jen trochu"],
+    ["všechno je v pořádku", "pravděpodobně"],
+    ["posílám ti", "malé objetí"],
+    ["žádné myšlenky", "jen pocity"],
+    ["jde ti to skvěle", "pokračuj"],
+    ["zhluboka se nadechni", "zvládneš to"],
+    ["posílám lásku", "tvou cestou"],
+    ["je to v pořádku", "odpočinout si"]
+  ]
+};
+
+// Translations
+const translations = {
+  en: {
+    topPlaceholder: "Top text…",
+    bottomPlaceholder: "Bottom text…",
+    randomBtn: "✨ Cute caption",
+    smileBtn: "🙂 I smiled",
+    saveBtn: "💾 Save image",
+    shareBtn: "📤 Share",
+    donateText: "Made you smile? Treat them ☕",
+    stats: "Your smiles:",
+    about: "About",
+    privacy: "Privacy"
+  },
+  ru: {
+    topPlaceholder: "Верхний текст…",
+    bottomPlaceholder: "Нижний текст…",
+    randomBtn: "✨ Милая подпись",
+    smileBtn: "🙂 Я улыбнулся",
+    saveBtn: "💾 Сохранить",
+    shareBtn: "📤 Поделиться",
+    donateText: "Заставило улыбнуться? Угости их ☕",
+    stats: "Твои улыбки:",
+    about: "О нас",
+    privacy: "Конфиденциальность"
+  },
+  he: {
+    topPlaceholder: "טקסט עליון…",
+    bottomPlaceholder: "טקסט תחתון…",
+    randomBtn: "✨ כיתוב חמוד",
+    smileBtn: "🙂 חייכתי",
+    saveBtn: "💾 שמור תמונה",
+    shareBtn: "📤 שתף",
+    donateText: "גרם לך לחייך? תגמל אותם ☕",
+    stats: "החיוכים שלך:",
+    about: "אודות",
+    privacy: "פרטיות"
+  },
+  de: {
+    topPlaceholder: "Oberer Text…",
+    bottomPlaceholder: "Unterer Text…",
+    randomBtn: "✨ Süße Beschriftung",
+    smileBtn: "🙂 Ich habe gelächelt",
+    saveBtn: "💾 Bild speichern",
+    shareBtn: "📤 Teilen",
+    donateText: "Hast du gelächelt? Belohne sie ☕",
+    stats: "Deine Lächeln:",
+    about: "Über",
+    privacy: "Datenschutz"
+  },
+  cs: {
+    topPlaceholder: "Horní text…",
+    bottomPlaceholder: "Dolní text…",
+    randomBtn: "✨ Roztomilý popisek",
+    smileBtn: "🙂 Usmál jsem se",
+    saveBtn: "💾 Uložit obrázek",
+    shareBtn: "📤 Sdílet",
+    donateText: "Rozesmálo tě to? Odměň je ☕",
+    stats: "Tvé úsměvy:",
+    about: "O nás",
+    privacy: "Soukromí"
+  }
+};
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -285,8 +406,52 @@ function roundRect(ctx, x, y, width, height, radius) {
 topInput.addEventListener("input", draw);
 bottomInput.addEventListener("input", draw);
 
+// Language management
+let currentLang = localStorage.getItem("language") || "en";
+
+function updateLanguage() {
+  const t = translations[currentLang];
+  const cuteList = cute[currentLang] || cute.en;
+  
+  topInput.placeholder = t.topPlaceholder;
+  bottomInput.placeholder = t.bottomPlaceholder;
+  document.getElementById("randomBtn").textContent = t.randomBtn;
+  document.getElementById("smileBtn").textContent = t.smileBtn;
+  document.getElementById("saveBtn").textContent = t.saveBtn;
+  document.getElementById("shareBtn").textContent = t.shareBtn;
+  document.querySelector('a[href*="buymeacoffee"]').textContent = t.donateText;
+  const statsText = document.querySelector(".stats");
+  if (statsText) {
+    statsText.innerHTML = t.stats + ' <b id="local">' + (localStorage.getItem("smiles") || "0") + "</b>";
+    // Update localEl reference
+    const newLocalEl = document.getElementById("local");
+    if (newLocalEl) {
+      window.localEl = newLocalEl;
+    }
+  }
+  document.querySelector('footer a[href="about.html"]').textContent = t.about;
+  document.querySelector('footer a[href="privacy.html"]').textContent = t.privacy;
+  const langSelect = document.getElementById("languageSelect");
+  if (langSelect) {
+    langSelect.value = currentLang;
+  }
+  
+  // Store cute captions for current language
+  window.currentCuteList = cuteList;
+}
+
+const langSelect = document.getElementById("languageSelect");
+if (langSelect) {
+  langSelect.addEventListener("change", function() {
+    currentLang = this.value;
+    localStorage.setItem("language", currentLang);
+    updateLanguage();
+  });
+}
+
 document.getElementById("randomBtn").onclick = function() {
-  const pair = cute[Math.floor(Math.random() * cute.length)];
+  const cuteList = window.currentCuteList || cute[currentLang] || cute.en;
+  const pair = cuteList[Math.floor(Math.random() * cuteList.length)];
   topInput.value = pair[0];
   bottomInput.value = pair[1];
   draw();
@@ -296,7 +461,10 @@ document.getElementById("smileBtn").onclick = function() {
   let count = parseInt(localStorage.getItem("smiles") || "0", 10);
   count++;
   localStorage.setItem("smiles", count.toString());
-  localEl.textContent = count;
+  const localElRef = window.localEl || localEl;
+  if (localElRef) {
+    localElRef.textContent = count;
+  }
   pickRandomImage();
 };
 
@@ -333,7 +501,11 @@ document.getElementById("shareBtn").onclick = async function() {
 };
 
 // Initialize
-localEl.textContent = localStorage.getItem("smiles") || "0";
+updateLanguage();
+const localElRef = window.localEl || localEl;
+if (localElRef) {
+  localElRef.textContent = localStorage.getItem("smiles") || "0";
+}
 pickRandomImage();
 
 // Auto-change image every 30 seconds
