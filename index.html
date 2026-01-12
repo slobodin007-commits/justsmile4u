@@ -34,6 +34,8 @@ font-weight:600;background:#fff;font-size:14px;cursor:pointer;text-decoration:no
 font-family:Inter;transition:background 0.2s}
 button:hover,a:hover{background:#f9fafb}
 button:active{background:#f3f4f6}
+#refreshBtn{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;
+font-size:20px;border-radius:50%}
 .stats{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
 .language-selector{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
 .language-selector select{border:1px solid var(--border);border-radius:999px;padding:8px 16px;
@@ -80,6 +82,7 @@ footer a:hover{color:var(--text);background:#f9fafb}
       <button id="saveBtn">💾 Save image</button>
       <button id="shareBtn">📤 Share</button>
       <a href="https://buymeacoffee.com/justsmile4u" target="_blank">Made you smile? Treat them ☕</a>
+      <button id="refreshBtn" title="Change image">↻</button>
     </div>
 
     <div class="language-selector">
@@ -507,6 +510,11 @@ document.getElementById("shareBtn").onclick = async function() {
   }
 };
 
+// Refresh button handler
+document.getElementById("refreshBtn").onclick = function() {
+  pickRandomImage();
+};
+
 // Initialize
 updateLanguage();
 const localElRef = window.localEl || localEl;
@@ -514,11 +522,6 @@ if (localElRef) {
   localElRef.textContent = localStorage.getItem("smiles") || "0";
 }
 pickRandomImage();
-
-// Auto-change image every 30 seconds
-setInterval(function() {
-  pickRandomImage();
-}, 30000);
 </script>
 </body>
 </html>
