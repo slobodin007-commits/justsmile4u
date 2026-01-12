@@ -70,7 +70,7 @@ footer a:hover{color:var(--text);background:#f9fafb}
       <button id="smileBtn">🙂 I smiled</button>
       <button id="saveBtn">💾 Save image</button>
       <button id="shareBtn">📤 Share</button>
-      <a href="https://buymeacoffee.com/justsmile4u" target="_blank">If they made you smile, you can treat them ☕</a>
+      <a href="https://buymeacoffee.com/justsmile4u" target="_blank">Made you smile? Treat them ☕</a>
     </div>
 
     <div class="stats">
@@ -100,7 +100,41 @@ footer a:hover{color:var(--text);background:#f9fafb}
 </div>
 
 <script>
-const images = ["img/cat-hug.png", "img/dog-hug.png", "img/axolotl-hug.png"];
+const images = [
+  "img/cat-hug.png",
+  "img/dog-hug.png",
+  "img/axolotl-hug.png",
+  "img/pomeranian-hug.png",
+  "img/scottish_fold-hug.png",
+  "img/dwarf_rabbit-hug.png",
+  "img/guinea_pig-hug.png",
+  "img/chinchilla-hug.png",
+  "img/corgi-hug.png",
+  "img/red_panda-hug.png",
+  "img/quokka-hug.png",
+  "img/fennec-hug.png",
+  "img/manul-hug.png",
+  "img/japanese_flying_squirrel-hug.png",
+  "img/dormouse-hug.png",
+  "img/ermine-hug.png",
+  "img/raccoon-hug.png",
+  "img/baby_seal-hug.png",
+  "img/sea_otter-hug.png",
+  "img/baby_penguin-hug.png",
+  "img/degu-hug.png",
+  "img/sloth-hug.png",
+  "img/loris-hug.png",
+  "img/koala-hug.png",
+  "img/pygmy_marmoset-hug.png",
+  "img/wombat-hug.png",
+  "img/tarsier-hug.png",
+  "img/tree_kangaroo-hug.png",
+  "img/mini_pig-hug.png",
+  "img/alpaca-hug.png",
+  "img/pygmy_goat-hug.png",
+  "img/highland_calf-hug.png",
+  "img/panda-hug.png"
+];
 const cute = [
   ["i need a hug", "just a little"],
   ["everything is fine", "probably"],
@@ -301,6 +335,11 @@ document.getElementById("shareBtn").onclick = async function() {
 // Initialize
 localEl.textContent = localStorage.getItem("smiles") || "0";
 pickRandomImage();
+
+// Auto-change image every 30 seconds
+setInterval(function() {
+  pickRandomImage();
+}, 30000);
 </script>
 </body>
 </html>
