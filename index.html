@@ -42,7 +42,10 @@ font-weight:400;background:#fff;font-size:14px;font-family:Inter;cursor:pointer;
 footer{text-align:center;font-size:12px;color:var(--muted);margin-top:20px}
 footer a{color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:4px}
 footer a:hover{color:var(--text);background:#f9fafb}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .ad{display:none}
+}
 </style>
 </head>
 
@@ -60,7 +63,9 @@ footer a:hover{color:var(--text);background:#f9fafb}
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
     <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
+         if (window.innerWidth > 900) {
+           (adsbygoogle = window.adsbygoogle || []).push({});
+         }
     </script>
   </div>
 
@@ -102,7 +107,9 @@ footer a:hover{color:var(--text);background:#f9fafb}
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
     <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
+         if (window.innerWidth > 900) {
+           (adsbygoogle = window.adsbygoogle || []).push({});
+         }
     </script>
   </div>
 </div>
