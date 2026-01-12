@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Just Smile 4 You</title>
+<meta name="description" content="A tiny site to make you smile."/>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<!-- AdSense -->
+<script async
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX"
+  crossorigin="anonymous"></script>
+
+<style>
+:root{
+ --border:#e5e7eb; --text:#111827; --muted:#6b7280;
+}
+body{margin:0;font-family:Inter,system-ui;background:#fff;color:var(--text)}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.page{max-width:980px;width:100%}
+.grid{display:grid;grid-template-columns:1fr min(420px,100%) 1fr;gap:14px}
+.ad{border:1px dashed var(--border);border-radius:16px;min-height:140px;
+display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted)}
+.center{border:1px solid var(--border);border-radius:22px;padding:16px}
+canvas{width:100%;height:auto}
+.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px}
+button,input,a{border:1px solid var(--border);border-radius:999px;padding:12px 14px;
+font-weight:600;background:#fff}
+.stats{text-align:center;color:var(--muted);font-size:14px;margin-top:10px}
+footer{text-align:center;font-size:12px;color:var(--muted);margin-top:14px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="page">
+
+<div class="grid">
+  <div class="ad">Ad</div>
+
+  <div class="center">
+    <canvas id="canvas" width="900" height="900"></canvas>
+
+    <div class="controls">
+      <input id="topText" placeholder="Top text…" maxlength="40">
+      <input id="bottomText" placeholder="Bottom text…" maxlength="40">
+      <button id="randomBtn">✨ Cute caption</button>
+      <button id="smileBtn">🙂 I smiled</button>
+      <button id="saveBtn">💾 Save</button>
+      <button id="shareBtn">📤 Share</button>
+      <a href="https://buymeacoffee.com/YOURNAME" target="_blank">☕ Treat them</a>
+    </div>
+
+    <div class="stats">
+      Smiles today: <b id="global">12483</b> · Your smiles: <b id="local">0</b>
+    </div>
+  </div>
+
+  <div class="ad">Ad</div>
+</div>
+
+<footer>
+<a href="about.html">About</a> · <a href="privacy.html">Privacy</a>
+</footer>
+
+</div>
+</div>
+
+<script>
+const images=["img/cat-hug.png","img/dog-hug.png","img/axolotl-hug.png"];
+const cute=[
+["i need a hug","just a little"],
+["everything is fine","probably"],
+["sending you","a tiny hug"],
+["no thoughts","only feelings"]
+];
+
+const c=document.getElementById("canvas"),ctx=c.getContext("2d");
+const top=document.getElementById("topText");
+const bot=document.getElementById("bottomText");
+const localEl=document.getElementById("local");
+const globalEl=document.getElementById("global");
+
+let img=new Image();
+function pick(){
+ img.src=images[Math.floor(Math.random()*images.length)];
+}
+img.onload=draw;
+
+function draw(){
+ ctx.fillStyle="#fff";ctx.fillRect(0,0,900,900);
+ const r=Math.min(800/img.width,800/img.height);
+ const w=img.width*r,h=img.height*r;
+ ctx.drawImage(img,(900-w)/2,(900-h)/2,w,h);
+ caption(top.value,40,false);
+ caption(bot.value,860,true);
+ ctx.fillStyle="rgba(0,0,0,.3)";
+ ctx.font="20px Inter";ctx.textAlign="right";
+ ctx.fillText("justsmile4u.com",880,880);
+}
+
+function caption(t,y,b){
+ if(!t)return;
+ ctx.font="800 56px Inter";ctx.textAlign="center";
+ ctx.textBaseline=b?"bottom":"top";
+ ctx.fillStyle="rgba(255,255,255,.85)";
+ ctx.fillRect(60,b?y-70:y,780,70);
+ ctx.fillStyle="#111";
+ ctx.fillText(t,450,b?y-56:y+10);
+}
+
+document.getElementById("randomBtn").onclick=()=>{
+ const p=cute[Math.floor(Math.random()*cute.length)];
+ top.value=p[0];bot.value=p[1];draw();
+};
+document.getElementById("saveBtn").onclick=()=>{
+ const a=document.createElement("a");
+ a.download="justsmile4u.png";
+ a.href=c.toDataURL();a.click();
+};
+document.getElementById("shareBtn").onclick=async()=>{
+ if(!navigator.share)return alert("Not supported");
+ c.toBlob(b=>{
+  navigator.share({files:[new File([b],"smile.png",{type:"image/png"})]});
+ });
+};
+document.getElementById("smileBtn").onclick=()=>{
+ let n=+(localStorage.smiles||0)+1;
+ localStorage.smiles=n;localEl.textContent=n;
+ globalEl.textContent=+globalEl.textContent+1;
+ pick();
+};
+localEl.textContent=localStorage.smiles||0;
+pick();
+</script>
+</body>
+</html>
